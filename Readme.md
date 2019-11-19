@@ -1,7 +1,7 @@
 # Личный проект «Большое путешествие» [![Build status][travis-image]][travis-url]
 
 * Студент: [Алексей Локтев](https://up.htmlacademy.ru/ecmascript/10/user/129863).
-* Наставник: `Неизвестно`.
+* Наставник: [Андрей Карякин](https://htmlacademy.ru/profile/id133011).
 
 ---
 
