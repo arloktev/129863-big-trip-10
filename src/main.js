@@ -283,7 +283,7 @@ const getTripDaysTemplate = () => {
         </div>
 
         <ul class="trip-events__list"></ul>
-      <li>
+      </li>
     </ul>
   `;
 };
