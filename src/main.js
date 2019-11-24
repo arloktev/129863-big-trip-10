@@ -1,6 +1,11 @@
 'use strict';
 
-const COUNT_TASKS = 3;
+const COUNT_EVENTS = 3;
+
+const tripInfo = document.querySelector(`.trip-main__trip-info`);
+const tripControls = document.querySelector(`.trip-main__trip-controls`);
+const lastHeadControls = tripControls.querySelector(`h2:last-child`);
+const tripEvents = document.querySelector(`.trip-events`);
 
 const getTripRouteTemplate = () => {
   return `
@@ -331,21 +336,32 @@ const renderComponent = (container, template, place) => {
   return container.insertAdjacentHTML(place, template);
 };
 
-const tripInfo = document.querySelector(`.trip-main__trip-info`);
-renderComponent(tripInfo, getTripRouteTemplate(), `afterbegin`);
+const convertStringToElement = (str) => {
+  const template = document.createElement(`template`);
+  template.innerHTML = str.trim();
+  return template.content.firstChild;
+};
 
-const tripControls = document.querySelector(`.trip-main__trip-controls`);
-const lastHeadControls = tripControls.querySelector(`h2:last-child`);
-renderComponent(lastHeadControls, getMenuTemplate(), `beforebegin`);
-renderComponent(lastHeadControls, getFilterTemplate(), `afterend`);
+const renderEvents = () => {
+  const fragment = document.createDocumentFragment();
 
-const tripEvents = document.querySelector(`.trip-events`);
-renderComponent(tripEvents, getSortingTemplate(), `beforeend`);
-renderComponent(tripEvents, getTripDaysTemplate(), `beforeend`);
+  for (let i = 0; i < COUNT_EVENTS; i++) {
+    fragment.append(convertStringToElement(getTripTemplate()));
+  }
 
-const tripEventsList = document.querySelector(`.trip-events__list`);
-renderComponent(tripEventsList, getTripEditTemplate(), `beforeend`);
+  return fragment;
+};
 
-for (let i = 0; i < COUNT_TASKS; i++) {
-  renderComponent(tripEventsList, getTripTemplate(), `beforeend`);
-}
+const render = () => {
+  renderComponent(tripInfo, getTripRouteTemplate(), `afterbegin`);
+  renderComponent(lastHeadControls, getMenuTemplate(), `beforebegin`);
+  renderComponent(lastHeadControls, getFilterTemplate(), `afterend`);
+  renderComponent(tripEvents, getSortingTemplate(), `beforeend`);
+  renderComponent(tripEvents, getTripDaysTemplate(), `beforeend`);
+
+  const tripEventsList = document.querySelector(`.trip-events__list`);
+  renderComponent(tripEventsList, getTripEditTemplate(), `beforeend`);
+  tripEventsList.append(renderEvents());
+};
+
+render();
