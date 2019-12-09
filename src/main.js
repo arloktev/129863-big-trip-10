@@ -5,6 +5,7 @@ import {getSortingTemplate} from './components/sorting/sorting';
 import {getTripEditTemplate} from './components/trip-edit/trip-edit';
 import {getTripDaysTemplate} from './components/trip-days/trip-days';
 import {getTripTemplate} from './components/trip/trip';
+import {generateTrip} from './mock/trip';
 
 const COUNT_EVENTS = 3;
 
@@ -46,3 +47,4 @@ const render = () => {
 };
 
 render();
+console.log(generateTrip());
