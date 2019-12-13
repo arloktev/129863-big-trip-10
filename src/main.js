@@ -5,7 +5,7 @@ import {getSortingTemplate} from './components/sorting/sorting';
 import {getTripEditTemplate} from './components/trip-edit/trip-edit';
 import {getTripDaysTemplate} from './components/trip-days/trip-days';
 import {getTripTemplate} from './components/trip/trip';
-import {generateTrip} from './mock/trip';
+import {generateTrips} from './mock/trip';
 
 const COUNT_EVENTS = 3;
 
@@ -13,6 +13,7 @@ const tripInfo = document.querySelector(`.trip-main__trip-info`);
 const tripControls = document.querySelector(`.trip-main__trip-controls`);
 const lastHeadControls = tripControls.querySelector(`h2:last-child`);
 const tripEvents = document.querySelector(`.trip-events`);
+const events = generateTrips(COUNT_EVENTS);
 
 const renderComponent = (container, template, place) => {
   return container.insertAdjacentHTML(place, template);
@@ -28,7 +29,7 @@ const renderEvents = () => {
   const fragment = document.createDocumentFragment();
 
   for (let i = 0; i < COUNT_EVENTS; i++) {
-    fragment.append(convertStringToElement(getTripTemplate()));
+    fragment.append(convertStringToElement(getTripTemplate(events[i])));
   }
 
   return fragment;
@@ -42,9 +43,8 @@ const render = () => {
   renderComponent(tripEvents, getTripDaysTemplate(), `beforeend`);
 
   const tripEventsList = document.querySelector(`.trip-events__list`);
-  renderComponent(tripEventsList, getTripEditTemplate(), `beforeend`);
+  renderComponent(tripEventsList, getTripEditTemplate(events[1]), `beforeend`);
   tripEventsList.append(renderEvents());
 };
 
 render();
-console.log(generateTrip());

@@ -1,3 +1,4 @@
+import {getRandomElement, getRandomBetween, getRandomDate} from '../utils';
 import {TypeTrip, City} from '../const';
 
 const additionalsOptions = [
@@ -34,23 +35,34 @@ const generateImages = (count) => {
   return result;
 };
 
-const getRandomBetween = (min, max) => {
-  return Math.floor(Math.random() * (max - min)) + min;
+const generateAdditionalsOptions = (array) => {
+  return array
+    .filter(() => Math.random() > 0.5)
+    .slice(0, 2);
 };
 
-const getRandomElement = (array) => {
-  const indexRandom = getRandomBetween(0, array.length);
-
-  return array[indexRandom];
-};
-
-export const generateTrip = () => {
+const generateTrip = () => {
   return {
     'type': getRandomElement(TypeTrip),
     'city': getRandomElement(City),
     'images': generateImages(getRandomBetween(0, 5)),
-    'description': generateDescription(description)
+    'description': generateDescription(description),
+    'date': getRandomDate(),
+    'price': getRandomBetween(1, 20) * 10,
+    'additionalOptions': generateAdditionalsOptions(additionalsOptions)
   };
 };
+
+const generateTrips = (count) => {
+  const result = [];
+
+  for (let i = 0; i < count; i++) {
+    result.push(generateTrip());
+  }
+
+  return result;
+};
+
+export {generateTrips};
 
 

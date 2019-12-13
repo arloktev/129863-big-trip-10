@@ -1,4 +1,26 @@
-export const getTripEditTemplate = () => {
+import {TypeTrip} from '../../const';
+
+const typeActivity = [`check-in`, `sightseeing`, `restaurant`];
+
+const sortingType = (types, isActivity = true) => {
+  types.filter((trip) => trip === [...typeActivity] && isActivity);
+};
+
+const createImageTemplate = (image) => {
+  return `<img class="event__photo" src="${image}.jpg" alt="Event photo">`;
+};
+
+const createImagesTemplate = (images) => {
+  return images
+    .map((image) => createImageTemplate(image))
+    .join(`\n`);
+};
+
+export const getTripEditTemplate = (trip) => {
+  const {type, description, images, price} = trip;
+
+  const imagesMarkup = createImagesTemplate(images);
+
   return `
     <li class="trip-events__item">
       <form class="event  event--edit" action="#" method="post">
@@ -6,7 +28,7 @@ export const getTripEditTemplate = () => {
           <div class="event__type-wrapper">
             <label class="event__type  event__type-btn" for="event-type-toggle-1">
               <span class="visually-hidden">Choose event type</span>
-              <img class="event__type-icon" width="17" height="17" src="img/icons/flight.png" alt="Event type icon">
+              <img class="event__type-icon" width="17" height="17" src="img/icons/${type}.png" alt="Event type icon">
             </label>
             <input class="event__type-toggle  visually-hidden" id="event-type-toggle-1" type="checkbox">
 
@@ -100,7 +122,7 @@ export const getTripEditTemplate = () => {
               <span class="visually-hidden">Price</span>
               &euro;
             </label>
-            <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="160">
+            <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${price}">
           </div>
 
           <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
@@ -174,15 +196,11 @@ export const getTripEditTemplate = () => {
 
           <section class="event__section  event__section--destination">
             <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-            <p class="event__destination-description">Geneva is a city in Switzerland that lies at the southern tip of expansive Lac Léman (Lake Geneva). Surrounded by the Alps and Jura mountains, the city has views of dramatic Mont Blanc.</p>
+            <p class="event__destination-description">${description}</p>
 
             <div class="event__photos-container">
               <div class="event__photos-tape">
-                <img class="event__photo" src="img/photos/1.jpg" alt="Event photo">
-                <img class="event__photo" src="img/photos/2.jpg" alt="Event photo">
-                <img class="event__photo" src="img/photos/3.jpg" alt="Event photo">
-                <img class="event__photo" src="img/photos/4.jpg" alt="Event photo">
-                <img class="event__photo" src="img/photos/5.jpg" alt="Event photo">
+                ${imagesMarkup}
               </div>
             </div>
           </section>
