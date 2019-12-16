@@ -1,20 +1,18 @@
-export const getFilterTemplate = () => {
+const createFilterTemplate = (name, activeElement) => {
+  const isChecked = activeElement === 0 ? `checked` : ``;
+
+  return `
+    <div class="trip-filters__filter">
+      <input id="filter-${name}" class="trip-filters__filter-input  visually-hidden" type="radio" name="trip-filter" value="${name}" ${isChecked}>
+      <label class="trip-filters__filter-label" for="filter-${name}">${name}</label>
+    </div>
+  `;
+};
+
+export const getFilterTemplate = (names) => {
   return `
     <form class="trip-filters" action="#" method="get">
-      <div class="trip-filters__filter">
-        <input id="filter-everything" class="trip-filters__filter-input  visually-hidden" type="radio" name="trip-filter" value="everything" checked>
-        <label class="trip-filters__filter-label" for="filter-everything">Everything</label>
-      </div>
-
-      <div class="trip-filters__filter">
-        <input id="filter-future" class="trip-filters__filter-input  visually-hidden" type="radio" name="trip-filter" value="future">
-        <label class="trip-filters__filter-label" for="filter-future">Future</label>
-      </div>
-
-      <div class="trip-filters__filter">
-        <input id="filter-past" class="trip-filters__filter-input  visually-hidden" type="radio" name="trip-filter" value="past">
-        <label class="trip-filters__filter-label" for="filter-past">Past</label>
-      </div>
+      ${names.map((name, i) => createFilterTemplate(name, i)).join(`\n`)}
 
       <button class="visually-hidden" type="submit">Accept filter</button>
     </form>

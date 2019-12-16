@@ -47,7 +47,10 @@ const generateTrip = () => {
     'city': getRandomElement(City),
     'images': generateImages(getRandomBetween(0, 5)),
     'description': generateDescription(description),
-    'date': getRandomDate(),
+    'date': {
+      'start': getRandomDate(),
+      'end': getRandomDate()
+    },
     'price': getRandomBetween(1, 20) * 10,
     'additionalOptions': generateAdditionalsOptions(additionalsOptions)
   };
