@@ -1,5 +1,5 @@
-import {getRandomElement, getRandomBetween, getRandomDate} from '../utils';
-import {TypeTrip, City} from '../const';
+import {getRandomElement, getRandomBetween, getRandomDate, formatDate} from '../utils';
+import {EventsCount, TypeTrip, City} from '../const';
 
 const additionalsOptions = [
   {type: `luggage`, name: `Add luggage`, price: `10`},
@@ -63,9 +63,12 @@ const generateTrips = (count) => {
     result.push(generateTrip());
   }
 
+  result.sort(({date}) => date.start - date.end);
+
   return result;
 };
 
-export {generateTrips};
+const events = generateTrips(EventsCount);
+const dates = [...new Set(events.map((event) => formatDate(event.date.start)))];
 
-
+export {events, dates};

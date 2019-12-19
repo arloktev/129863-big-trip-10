@@ -1,4 +1,4 @@
-import {ucFirst, costTimeFormat} from '../../utils';
+import {ucFirst, formatDate, formatTime, formatDuration, costTimeFormat} from '../../utils';
 
 const createOfferTemplate = (offer) => {
   const {name, price} = offer;
@@ -16,41 +16,6 @@ const createOffersTemplate = (options) => {
   return options
     .map((offer) => createOfferTemplate(offer))
     .join(`\n`);
-};
-
-const formatDate = (date) => {
-  const year = date.getFullYear();
-  const month = costTimeFormat(date.getMonth() + 1);
-  const day = costTimeFormat(date.getDate());
-  const hours = costTimeFormat(date.getHours());
-  const minutes = costTimeFormat(date.getMinutes());
-
-  return `${year}-${month}-${day}T${hours}:${minutes}`;
-};
-
-const formatTime = (date) => {
-  const hours = costTimeFormat(date.getHours());
-  const minutes = costTimeFormat(date.getMinutes());
-
-  return `${hours}:${minutes}`;
-};
-
-const formatDuration = (startDate, endDate) => {
-  const msDay = 60 * 60 * 24 * 1000;
-  const durationMs = endDate - startDate;
-
-  const startDateHours = startDate.getHours();
-  const endDateHours = endDate.getHours();
-  const startDateMinutes = startDate.getMinutes();
-  const endDateMinutes = endDate.getMinutes();
-
-  const durationDay = Math.floor(durationMs / msDay);
-  const durationHours = (endDateHours > startDateHours) ? endDateHours - startDateHours : 24 - startDateHours + endDateHours;
-  const durationMinutes = (endDateMinutes > startDateMinutes) ? endDateMinutes - startDateMinutes : 60 - startDateMinutes + endDateMinutes;
-
-  const showDay = durationDay > 0 ? `${durationDay}D` : ``;
-
-  return `${showDay} ${costTimeFormat(durationHours)}H ${durationMinutes}M`;
 };
 
 export const getTripTemplate = (trip) => {
@@ -73,9 +38,9 @@ export const getTripTemplate = (trip) => {
 
         <div class="event__schedule">
           <p class="event__time">
-            <time class="event__start-time" datetime="${formatDate(startDate)}">${formatTime(startDate)}</time>
+            <time class="event__start-time" datetime="${formatDate(startDate)}T${formatTime(startDate)}">${formatTime(startDate)}</time>
             &mdash;
-            <time class="event__end-time" datetime="${formatDate(endDate)}">${formatTime(endDate)}</time>
+            <time class="event__end-time" datetime="${formatDate(endDate)}T${formatTime(endDate)}">${formatTime(endDate)}</time>
           </p>
           <p class="event__duration">${formatDuration(startDate, endDate)}</p>
         </div>

@@ -1,3 +1,5 @@
+export const EventsCount = 10;
+
 export const NameSorting = [`event`, `time`, `price`];
 
 export const NameFilters = [`everything`, `future`, `past`];
