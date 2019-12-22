@@ -1,5 +1,5 @@
 import {TypeTrip, City} from '../../const';
-import {ucFirst, costTimeFormat} from '../../utils';
+import {ucFirst, costTimeFormat, createListTemplate} from '../../utils';
 
 const typeActivity = [`check-in`, `sightseeing`, `restaurant`];
 
@@ -7,28 +7,16 @@ const getTransferType = (arr, sortArr) => {
   return arr.filter((item) => !sortArr.includes(item));
 };
 
-const createEventTypeTemplate = (type) => {
+const createEventTypeTemplate = (type, index) => {
   return `
     <div class="event__type-item">
-      <input id="event-type-${type}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${type}">
-      <label class="event__type-label  event__type-label--${type}" for="event-type-${type}-1">${ucFirst(type)}</label>
+      <input id="event-type-${type}-${index}" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${type}">
+      <label class="event__type-label  event__type-label--${type}" for="event-type-${type}-${index}">${ucFirst(type)}</label>
     </div>
   `;
 };
 
-const createEventTypeListTemplate = (types) => {
-  return types
-    .map((type) => createEventTypeTemplate(type))
-    .join(`\n`);
-};
-
 const createDestinationTemplate = (city) => `<option value="${city}"></option>`;
-
-const createDestinationListTemplate = (cities) => {
-  return cities
-    .map((city) => createDestinationTemplate(city))
-    .join(`\n`);
-};
 
 const createOfferTemplate = (offer) => {
   const {type, name, price} = offer;
@@ -45,19 +33,7 @@ const createOfferTemplate = (offer) => {
   `;
 };
 
-const createOffersTemplate = (offers) => {
-  return offers
-    .map((offer) => createOfferTemplate(offer))
-    .join(`\n`);
-};
-
 const createImageTemplate = (image) => `<img class="event__photo" src="${image}.jpg" alt="Event photo">`;
-
-const createImagesTemplate = (images) => {
-  return images
-    .map((image) => createImageTemplate(image))
-    .join(`\n`);
-};
 
 const formatDate = (date) => {
   const year = `${date.getFullYear()}`.slice(-2);
@@ -70,18 +46,13 @@ const formatDate = (date) => {
 };
 
 export const getTripEditTemplate = (trip) => {
-  const {type, city, images, description, price, additionalOptions, date} = trip;
+  const {type, city, images, description, price, additionalOptions, startDate, endDate} = trip;
 
-  let startDate = new Date();
-  let endDate = new Date();
-  startDate.setTime(Math.min(date.start, date.end));
-  endDate.setTime(Math.max(date.start, date.end));
-
-  const transferMarkup = createEventTypeListTemplate(getTransferType(TypeTrip, typeActivity));
-  const activityMarkup = createEventTypeListTemplate(typeActivity);
-  const destinationMarkup = createDestinationListTemplate(City);
-  const offersMarkup = createOffersTemplate(additionalOptions, type);
-  const imagesMarkup = createImagesTemplate(images);
+  const transferMarkup = createListTemplate(getTransferType(TypeTrip, typeActivity), createEventTypeTemplate);
+  const activityMarkup = createListTemplate(typeActivity, createEventTypeTemplate);
+  const destinationMarkup = createListTemplate(City, createDestinationTemplate);
+  const offersMarkup = createListTemplate(additionalOptions, createOfferTemplate);
+  const imagesMarkup = createListTemplate(images, createImageTemplate);
 
   return `
     <li class="trip-events__item">

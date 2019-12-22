@@ -1,11 +1,9 @@
+import {SvgElement} from '../../const';
+
 const createItemSortingTemplate = (name, activeElement) => {
-  const svgElement = `
-    <svg class="trip-sort__direction-icon" width="8" height="10" viewBox="0 0 8 10">
-      <path d="M2.888 4.852V9.694H5.588V4.852L7.91 5.068L4.238 0.00999987L0.548 5.068L2.888 4.852Z"/>
-    </svg>
-  `;
+
   const isChecked = activeElement === 0 ? `checked` : ``;
-  const showSvgElement = activeElement === 0 ? `` : svgElement;
+  const showSvgElement = activeElement === 0 ? `` : SvgElement;
 
   return `
     <div class="trip-sort__item  trip-sort__item--${name}">

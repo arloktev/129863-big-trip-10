@@ -2,15 +2,15 @@ import {getTripRouteTemplate} from './components/trip-route/trip-route';
 import {getMenuTemplate} from './components/menu/menu';
 import {getFilterTemplate} from './components/filter/filter';
 import {getSortingTemplate} from './components/sorting/sorting';
-import {getTripEditTemplate} from './components/trip-edit/trip-edit';
 import {getTripDaysTemplate} from './components/trip-days/trip-days';
-import {getDayTemplate} from './components/day/day';
-import {NameFilters, NameTabs, NameSorting, EventsCount} from './const';
-import {formatDate} from './utils';
 import {getTripTemplate} from './components/trip/trip';
+import {getDayTemplate} from './components/day/day';
+import {NameFilters, NameTabs, NameSorting} from './const';
+import {formatDate} from './utils';
 import {events, dates} from './mock/trip';
 
 const tripInfo = document.querySelector(`.trip-main__trip-info`);
+const tripCost = document.querySelector(`.trip-info__cost-value`);
 const tripControls = document.querySelector(`.trip-main__trip-controls`);
 const lastHeadControls = tripControls.querySelector(`h2:last-child`);
 const tripEvents = document.querySelector(`.trip-events`);
@@ -19,24 +19,19 @@ const renderComponent = (container, template, place) => {
   return container.insertAdjacentHTML(place, template);
 };
 
-const convertStringToElement = (str) => {
-  const template = document.createElement(`template`);
-  template.innerHTML = str.trim();
-  return template.content.firstChild;
-};
+const calculatePrice = (items) => {
+  let result = 0;
 
-const renderEvents = () => {
-  const fragment = document.createDocumentFragment();
+  items.forEach((item) => {
+    result += item.price;
+  });
 
-  for (let i = 1; i < EventsCount; i++) {
-    fragment.append(convertStringToElement(getTripTemplate(events[i])));
-  }
-
-  return fragment;
+  return result;
 };
 
 const render = () => {
-  renderComponent(tripInfo, getTripRouteTemplate(), `afterbegin`);
+  renderComponent(tripInfo, getTripRouteTemplate(events), `afterbegin`);
+  tripCost.innerHTML = calculatePrice(events);
   renderComponent(lastHeadControls, getMenuTemplate(NameTabs), `beforebegin`);
   renderComponent(lastHeadControls, getFilterTemplate(NameFilters), `afterend`);
   renderComponent(tripEvents, getSortingTemplate(NameSorting), `beforeend`);
@@ -46,18 +41,14 @@ const render = () => {
 
   dates.forEach((date, dateIndex) => {
     renderComponent(tripDays, getDayTemplate(date, dateIndex), `beforeend`);
-    const tripEventsList = tripDays.querySelector(`.trip-events__list`);
+    const tripEventsList = tripDays.querySelectorAll(`.trip-events__list`)[dateIndex];
 
-    const sortedEvents = events
-      .filter((event) => formatDate(event.date.start) === date)
-      .forEach((event, index) => {
-        tripEventsList[dateIndex].append(convertStringToElement(getTripTemplate(event[index])));
+    events
+      .filter((event) => formatDate(event.startDate) === date)
+      .forEach((event) => {
+        renderComponent(tripEventsList, getTripTemplate(event), `beforeend`);
       });
   });
-
-
-  // renderComponent(tripEventsList, getTripEditTemplate(events[0]), `beforeend`);
-  // tripEventsList.append(renderEvents());
 };
 
 render();

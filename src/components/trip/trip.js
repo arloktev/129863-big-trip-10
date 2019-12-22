@@ -1,4 +1,4 @@
-import {ucFirst, formatDate, formatTime, formatDuration, costTimeFormat} from '../../utils';
+import {ucFirst, formatDate, formatTime, formatDuration, createListTemplate} from '../../utils';
 
 const createOfferTemplate = (offer) => {
   const {name, price} = offer;
@@ -12,21 +12,10 @@ const createOfferTemplate = (offer) => {
   `;
 };
 
-const createOffersTemplate = (options) => {
-  return options
-    .map((offer) => createOfferTemplate(offer))
-    .join(`\n`);
-};
-
 export const getTripTemplate = (trip) => {
-  const {type, city, price, additionalOptions, date} = trip;
+  const {type, city, price, additionalOptions, startDate, endDate} = trip;
 
-  let startDate = new Date();
-  let endDate = new Date();
-  startDate.setTime(Math.min(date.start, date.end));
-  endDate.setTime(Math.max(date.start, date.end));
-
-  const offersMarkup = createOffersTemplate(additionalOptions);
+  const offersMarkup = createListTemplate(additionalOptions, createOfferTemplate);
 
   return `
     <li class="trip-events__item">

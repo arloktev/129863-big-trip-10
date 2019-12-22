@@ -1,21 +1,17 @@
+import {CountTime} from './const';
+
 export const ucFirst = (str) => str.charAt(0).toUpperCase() + str.slice(1);
 
-export const getRandomBetween = (min, max) => {
-  return Math.floor(Math.random() * (max - min)) + min;
-};
+export const getRandomBetween = (min, max) => Math.floor(Math.random() * (max - min)) + min;
 
-export const getRandomElement = (array) => {
-  const indexRandom = getRandomBetween(0, array.length);
-
-  return array[indexRandom];
-};
+export const getRandomElement = (array) => array[getRandomBetween(0, array.length)];
 
 export const getRandomDate = () => {
   const targetDate = new Date();
 
-  targetDate.setDate(targetDate.getDate() + getRandomBetween(0, 7));
-  targetDate.setHours(targetDate.getHours() + getRandomBetween(0, 24));
-  targetDate.setMinutes(targetDate.getMinutes() + getRandomBetween(0, 60));
+  targetDate.setDate(targetDate.getDate() + getRandomBetween(0, CountTime.DAYS));
+  targetDate.setHours(targetDate.getHours() + getRandomBetween(0, CountTime.HOURS));
+  targetDate.setMinutes(targetDate.getMinutes() + getRandomBetween(0, CountTime.MINUTES));
 
   return targetDate;
 };
@@ -36,7 +32,10 @@ export const formatTime = (date) => {
 };
 
 export const formatDuration = (startDate, endDate) => {
-  const msDay = 60 * 60 * 24 * 1000;
+  const msSecond = 1000;
+  const msMinute = CountTime.SECONDS * msSecond;
+  const msHour = CountTime.MINUTES * msMinute;
+  const msDay = CountTime.HOURS * msHour;
   const durationMs = endDate - startDate;
 
   const startDateHours = startDate.getHours();
@@ -45,14 +44,20 @@ export const formatDuration = (startDate, endDate) => {
   const endDateMinutes = endDate.getMinutes();
 
   const durationDay = Math.floor(durationMs / msDay);
-  const durationHours = (endDateHours > startDateHours) ? endDateHours - startDateHours : 24 - startDateHours + endDateHours;
-  const durationMinutes = (endDateMinutes > startDateMinutes) ? endDateMinutes - startDateMinutes : 60 - startDateMinutes + endDateMinutes;
+  const durationHours = (endDateHours > startDateHours) ? endDateHours - startDateHours : CountTime.HOURS - startDateHours + endDateHours;
+  const durationMinutes = (endDateMinutes > startDateMinutes) ? endDateMinutes - startDateMinutes : CountTime.MINUTES - startDateMinutes + endDateMinutes;
 
   const showDay = durationDay > 0 ? `${durationDay}D` : ``;
 
   return `${showDay} ${costTimeFormat(durationHours)}H ${durationMinutes}M`;
 };
 
-export const costTimeFormat = (value) => {
-  return value < 10 ? `0${value}` : value;
+export const costTimeFormat = (value) => value < 10 ? `0${value}` : value;
+
+export const monthToLocaleShort = (date) => date.toLocaleString(`en`, {month: `short`});
+
+export const createListTemplate = (items, callback) => {
+  return items
+    .map((item, index) => callback(item, index))
+    .join(`\n`);
 };

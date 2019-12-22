@@ -1,6 +1,8 @@
+import {monthToLocaleShort} from '../../utils';
+
 export const getDayTemplate = (date, index) => {
   const newDate = new Date(date);
-  const month = newDate.toLocaleString(`en`, {month: `short`});
+  const month = monthToLocaleShort(newDate);
   const day = newDate.getDate();
 
   return `
