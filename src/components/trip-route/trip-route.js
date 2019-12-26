@@ -1,9 +1,13 @@
-export const getTripRouteTemplate = () => {
+import {getInfoTrip} from '../../utils';
+
+export const getTripRouteTemplate = (events) => {
+  const {tripRoute, tripDuration} = getInfoTrip(events);
+
   return `
     <div class="trip-info__main">
-      <h1 class="trip-info__title">Amsterdam &mdash; ... &mdash; Amsterdam</h1>
+      <h1 class="trip-info__title">${tripRoute}</h1>
 
-      <p class="trip-info__dates">Mar 18&nbsp;&mdash;&nbsp;21</p>
+      <p class="trip-info__dates">${tripDuration}</p>
     </div>
   `;
 };
