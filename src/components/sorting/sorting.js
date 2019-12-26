@@ -1,16 +1,15 @@
-import {SvgElement} from '../../const';
+import {SVG_ELEMENT} from '../../const';
 
 const createItemSortingTemplate = (name, activeElement) => {
 
-  const isChecked = activeElement === 0 ? `checked` : ``;
-  const showSvgElement = activeElement === 0 ? `` : SvgElement;
+  const [isChecked, svgElement] = activeElement === 0 ? [`checked`, ``] : [``, SVG_ELEMENT];
 
   return `
     <div class="trip-sort__item  trip-sort__item--${name}">
       <input id="sort-${name}" class="trip-sort__input  visually-hidden" type="radio" name="trip-sort" value="sort-${name}" ${isChecked}>
       <label class="trip-sort__btn" for="sort-${name}">
         ${name}
-        ${showSvgElement}
+        ${svgElement}
       </label>
     </div>
   `;

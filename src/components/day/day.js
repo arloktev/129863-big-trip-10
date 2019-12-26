@@ -1,9 +1,7 @@
-import {monthToLocaleShort} from '../../utils';
+import {getInfoDate} from '../../utils';
 
 export const getDayTemplate = (date, index) => {
-  const newDate = new Date(date);
-  const month = monthToLocaleShort(newDate);
-  const day = newDate.getDate();
+  const {day, month} = getInfoDate(date);
 
   return `
     <li class="trip-days__item  day">

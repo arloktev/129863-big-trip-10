@@ -1,5 +1,5 @@
-import {getRandomElement, getRandomBetween, getRandomDate, formatDate} from '../utils';
-import {EventsCount, TypeTrip, City} from '../const';
+import {getRandomElement, getRandomBetween, getRandomDate, formatDate, shuffle} from '../utils';
+import {EventsCount, TYPE_TRIP, CITY} from '../const';
 
 const additionalsOptions = [
   {type: `luggage`, name: `Add luggage`, price: `10`},
@@ -10,23 +10,13 @@ const additionalsOptions = [
 
 const description = `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras aliquet varius magna, non porta ligula feugiat eget. Fusce tristique felis at fermentum pharetra. Aliquam id orci ut lectus varius viverra. Nullam nunc ex, convallis sed finibus eget, sollicitudin eget ante. Phasellus eros mauris, condimentum sed nibh vitae, sodales efficitur ipsum. Sed blandit, eros vel aliquam faucibus, purus ex euismod diam, eu luctus nunc ante ut dui. Sed sed nisi sed augue convallis suscipit in sed felis. Aliquam erat volutpat. Nunc fermentum tortor ac porta dapibus. In rutrum ac purus sit amet tempus.`;
 
-const shuffle = (array) => {
-  const newArray = array.slice();
+const getDescriptionArray = description.split(`. `);
 
-  for (let i = newArray.length - 1; i > 0; i--) {
-    let j = Math.floor(Math.random() * (i + 1));
-    [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
-  }
-
-  return newArray;
-};
-
-const generateDescription = (text) => {
-  const array = text.split(`. `);
+const generateDescription = () => {
   const startValue = 1;
   const endValue = 4;
 
-  return shuffle(array).slice(0, getRandomBetween(startValue, endValue)).join(`. `);
+  return shuffle(getDescriptionArray).slice(0, getRandomBetween(startValue, endValue)).join(`. `);
 };
 
 const generateImages = (count) => {
@@ -64,8 +54,8 @@ const generateTrip = () => {
   endDate.setTime(Math.max(startRandomDate, endRandomDate));
 
   return {
-    'type': getRandomElement(TypeTrip),
-    'city': getRandomElement(City),
+    'type': getRandomElement(TYPE_TRIP),
+    'city': getRandomElement(CITY),
     'images': generateImages(getRandomBetween(startValueImage, endValueImage)),
     'description': generateDescription(description),
     startDate,

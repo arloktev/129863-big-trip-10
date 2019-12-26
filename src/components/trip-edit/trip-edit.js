@@ -1,7 +1,5 @@
-import {TypeTrip, City} from '../../const';
+import {TYPE_TRIP, TYPE_ACTIVITY, CITY} from '../../const';
 import {ucFirst, costTimeFormat, createListTemplate} from '../../utils';
-
-const typeActivity = [`check-in`, `sightseeing`, `restaurant`];
 
 const getTransferType = (arr, sortArr) => {
   return arr.filter((item) => !sortArr.includes(item));
@@ -48,9 +46,9 @@ const formatDate = (date) => {
 export const getTripEditTemplate = (trip) => {
   const {type, city, images, description, price, additionalOptions, startDate, endDate} = trip;
 
-  const transferMarkup = createListTemplate(getTransferType(TypeTrip, typeActivity), createEventTypeTemplate);
-  const activityMarkup = createListTemplate(typeActivity, createEventTypeTemplate);
-  const destinationMarkup = createListTemplate(City, createDestinationTemplate);
+  const transferMarkup = createListTemplate(getTransferType(TYPE_TRIP, TYPE_ACTIVITY), createEventTypeTemplate);
+  const activityMarkup = createListTemplate(TYPE_ACTIVITY, createEventTypeTemplate);
+  const destinationMarkup = createListTemplate(CITY, createDestinationTemplate);
   const offersMarkup = createListTemplate(additionalOptions, createOfferTemplate);
   const imagesMarkup = createListTemplate(images, createImageTemplate);
 

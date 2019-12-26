@@ -16,6 +16,17 @@ export const getRandomDate = () => {
   return targetDate;
 };
 
+export const getInfoDate = (date) => {
+  const newDate = new Date(date);
+  const month = monthToLocaleShort(newDate);
+  const day = newDate.getDate();
+
+  return {
+    day,
+    month
+  };
+};
+
 export const formatDate = (date) => {
   const year = date.getFullYear();
   const month = costTimeFormat(date.getMonth() + 1);
@@ -60,4 +71,43 @@ export const createListTemplate = (items, callback) => {
   return items
     .map((item, index) => callback(item, index))
     .join(`\n`);
+};
+
+export const shuffle = (array) => {
+  const newArray = array.slice();
+
+  for (let i = newArray.length - 1; i > 0; i--) {
+    let j = Math.floor(Math.random() * (i + 1));
+    [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+  }
+
+  return newArray;
+};
+
+
+export const getInfoTrip = (events) => {
+  const firstEvent = events[0];
+  const lastEvent = events[events.length - 1];
+  const tripRoute = events.length > 2 ? `${firstEvent.city} &mdash; ... &mdash; ${lastEvent.city}` : `${firstEvent.city} &mdash; ${lastEvent.city}`;
+
+  const firstMonth = monthToLocaleShort(firstEvent.startDate);
+  const lastMonth = monthToLocaleShort(lastEvent.startDate);
+  const firstDay = firstEvent.startDate.getDate();
+  const lastDay = lastEvent.startDate.getDate();
+  const tripDuration = `${firstMonth} ${firstDay}&nbsp;&mdash;&nbsp;${firstMonth === lastMonth ? `` : lastMonth} ${lastDay}`;
+
+  return {
+    tripRoute,
+    tripDuration
+  };
+};
+
+export const renderComponent = (container, template, place) => {
+  return container.insertAdjacentHTML(place, template);
+};
+
+export const convertStringToElement = (str) => {
+  const template = document.createElement(`template`);
+  template.innerHTML = str.trim();
+  return template.content.firstChild;
 };
