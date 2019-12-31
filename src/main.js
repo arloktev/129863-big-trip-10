@@ -1,3 +1,4 @@
+import NoPoints from './components/no-points/no-points';
 import TripRoute from './components/trip-route/trip-route';
 import Menu from './components/menu/menu';
 import Filter from './components/filter/filter';
@@ -31,17 +32,29 @@ const calculatePrice = (items) => items
 const renderEvents = (event, place) => {
   const tripComponent = new Trip(event);
   const tripEditComponent = new TripEdit(event);
+  const editTripButton = tripComponent.getElement().querySelector(`.event__rollup-btn`);
 
   const replaceTripToEdit = () => {
     place.replaceChild(tripEditComponent.getElement(), tripComponent.getElement());
   };
 
-  const editTripButton = tripComponent.getElement().querySelector(`.event__rollup-btn`);
-  editTripButton.addEventListener(`click`, replaceTripToEdit);
-
   const replaceEditToTrip = () => {
     place.replaceChild(tripComponent.getElement(), tripEditComponent.getElement());
   };
+
+  const onEscDown = (evt) => {
+    const isEsc = evt.code === `Esc` || evt.code === `Escape`;
+
+    if (isEsc) {
+      replaceEditToTrip();
+      document.removeEventListener(`keydown`, onEscDown);
+    }
+  };
+
+  editTripButton.addEventListener(`click`, () => {
+    replaceTripToEdit();
+    document.addEventListener(`keydown`, onEscDown);
+  });
 
   const editTripForm = tripEditComponent.getElement().querySelector(`form`);
   editTripForm.addEventListener(`submit`, replaceEditToTrip);
@@ -68,16 +81,20 @@ const generateDaysFragment = () => {
 };
 
 const render = () => {
-  renderElement(NODE_TRIP.tripInfo, new TripRoute(events).getElement(), RenderPosition.AFTERBEGIN);
-  tripCost.innerHTML = calculatePrice(events);
-  renderElement(NODE_TRIP.lastHeadControls, new Menu(NAME_TABS).getElement(), RenderPosition.BEFOREBEGIN);
-  renderElement(NODE_TRIP.lastHeadControls, new Filter(NAME_FILTERS).getElement(), RenderPosition.AFTEREND);
-  renderElement(NODE_TRIP.tripEvents, new Sorting(NAME_SORTING).getElement(), RenderPosition.BEFOREEND);
-  renderElement(NODE_TRIP.tripEvents, new TripDays().getElement(), RenderPosition.BEFOREEND);
+  if (events.length < 1) {
+    NODE_TRIP.tripEvents.append(new NoPoints().getElement());
+  } else {
+    renderElement(NODE_TRIP.tripInfo, new TripRoute(events).getElement(), RenderPosition.AFTERBEGIN);
+    tripCost.innerHTML = calculatePrice(events);
+    renderElement(NODE_TRIP.lastHeadControls, new Menu(NAME_TABS).getElement(), RenderPosition.BEFOREBEGIN);
+    renderElement(NODE_TRIP.lastHeadControls, new Filter(NAME_FILTERS).getElement(), RenderPosition.AFTEREND);
+    renderElement(NODE_TRIP.tripEvents, new Sorting(NAME_SORTING).getElement(), RenderPosition.BEFOREEND);
+    renderElement(NODE_TRIP.tripEvents, new TripDays().getElement(), RenderPosition.BEFOREEND);
 
-  const tripDays = NODE_TRIP.tripEvents.querySelector(`.trip-days`);
+    const tripDays = NODE_TRIP.tripEvents.querySelector(`.trip-days`);
 
-  tripDays.append(generateDaysFragment());
+    tripDays.append(generateDaysFragment());
+  }
 };
 
 render();
