@@ -4,6 +4,7 @@ import Filter from './components/filter/filter';
 import Sorting from './components/sorting/sorting';
 import TripDays from './components/trip-days/trip-days';
 import Trip from './components/trip/trip';
+import TripEdit from './components/trip-edit/trip-edit';
 import Day from './components/day/day';
 import {NAME_FILTERS, NAME_TABS, NAME_SORTING} from './const';
 import {formatDate, RenderPosition, renderElement} from './utils';
@@ -27,6 +28,27 @@ const calculatePrice = (items) => items
   .map((item) => item.price)
   .reduce((sum, current) => sum + current);
 
+const renderEvents = (event, place) => {
+  const tripComponent = new Trip(event);
+  const tripEditComponent = new TripEdit(event);
+
+  const replaceTripToEdit = () => {
+    place.replaceChild(tripEditComponent.getElement(), tripComponent.getElement());
+  };
+
+  const editTripButton = tripComponent.getElement().querySelector(`.event__rollup-btn`);
+  editTripButton.addEventListener(`click`, replaceTripToEdit);
+
+  const replaceEditToTrip = () => {
+    place.replaceChild(tripComponent.getElement(), tripEditComponent.getElement());
+  };
+
+  const editTripForm = tripEditComponent.getElement().querySelector(`form`);
+  editTripForm.addEventListener(`submit`, replaceEditToTrip);
+
+  renderElement(place, tripComponent.getElement(), RenderPosition.BEFOREEND);
+};
+
 const generateDaysFragment = () => {
 
   const daysFragment = document.createDocumentFragment();
@@ -37,9 +59,7 @@ const generateDaysFragment = () => {
 
     events
       .filter((event) => formatDate(event.startDate) === date)
-      .forEach((event) => {
-        renderElement(tripEventsList, new Trip(event).getElement(), RenderPosition.BEFOREEND);
-      });
+      .forEach((event) => renderEvents(event, tripEventsList));
 
     daysFragment.append(day);
   });
