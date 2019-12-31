@@ -1,3 +1,4 @@
+import {createElement} from '../../utils';
 import {SVG_ELEMENT} from '../../const';
 
 const createItemSortingTemplate = (name, activeElement) => {
@@ -15,7 +16,7 @@ const createItemSortingTemplate = (name, activeElement) => {
   `;
 };
 
-export const getSortingTemplate = (names) => {
+const getSortingTemplate = (names) => {
   return `
     <form class="trip-events__trip-sort  trip-sort" action="#" method="get">
       <span class="trip-sort__item  trip-sort__item--day">Day</span>
@@ -26,3 +27,26 @@ export const getSortingTemplate = (names) => {
     </form>
   `;
 };
+
+export default class Sorting {
+  constructor(names) {
+    this._element = null;
+    this._names = names;
+  }
+
+  getTemplate() {
+    return getSortingTemplate(this._names);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

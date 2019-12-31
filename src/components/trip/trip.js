@@ -1,4 +1,4 @@
-import {ucFirst, formatDate, formatTime, formatDuration, createListTemplate} from '../../utils';
+import {ucFirst, formatDate, formatTime, formatDuration, createListTemplate, createElement} from '../../utils';
 
 const createOfferTemplate = (offer) => {
   const {name, price} = offer;
@@ -50,3 +50,26 @@ export const getTripTemplate = (trip) => {
     </li>
   `;
 };
+
+export default class Trip {
+  constructor(trip) {
+    this._element = null;
+    this._trip = trip;
+  }
+
+  getTemplate() {
+    return getTripTemplate(this._trip);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

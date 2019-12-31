@@ -1,6 +1,6 @@
-import {getInfoTrip} from '../../utils';
+import {getInfoTrip, createElement} from '../../utils';
 
-export const getTripRouteTemplate = (events) => {
+const getTripRouteTemplate = (events) => {
   const {tripRoute, tripDuration} = getInfoTrip(events);
 
   return `
@@ -11,3 +11,26 @@ export const getTripRouteTemplate = (events) => {
     </div>
   `;
 };
+
+export default class TripRoute {
+  constructor(events) {
+    this._element = null;
+    this._events = events;
+  }
+
+  getTemplate() {
+    return getTripRouteTemplate(this._events);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

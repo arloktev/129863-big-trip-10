@@ -1,6 +1,6 @@
-import {getInfoDate} from '../../utils';
+import {createElement, getInfoDate} from '../../utils';
 
-export const getDayTemplate = (date, index) => {
+const getDayTemplate = (date, index) => {
   const {day, month} = getInfoDate(date);
 
   return `
@@ -14,3 +14,27 @@ export const getDayTemplate = (date, index) => {
     </li>
   `;
 };
+
+export default class Day {
+  constructor(date, index) {
+    this._element = null;
+    this._date = date;
+    this._index = index;
+  }
+
+  getTemplate() {
+    return getDayTemplate(this._date, this._index);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
