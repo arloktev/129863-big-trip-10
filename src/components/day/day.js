@@ -1,4 +1,5 @@
-import {createElement, getInfoDate} from '../../utils';
+import {getInfoDate} from '../../utils/common';
+import AbstractComponent from '../abstract-component/abstract-component';
 
 const getDayTemplate = (date, index) => {
   const {day, month} = getInfoDate(date);
@@ -15,26 +16,15 @@ const getDayTemplate = (date, index) => {
   `;
 };
 
-export default class Day {
+export default class Day extends AbstractComponent {
   constructor(date, index) {
-    this._element = null;
+    super();
+
     this._date = date;
     this._index = index;
   }
 
   getTemplate() {
     return getDayTemplate(this._date, this._index);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

@@ -1,4 +1,4 @@
-import {CountTime} from './const';
+import {CountTime} from '../const';
 
 export const ucFirst = (str) => str.charAt(0).toUpperCase() + str.slice(1);
 
@@ -100,45 +100,4 @@ export const getInfoTrip = (events) => {
     tripRoute,
     tripDuration
   };
-};
-
-export const renderComponent = (container, template, place) => {
-  return container.insertAdjacentHTML(place, template);
-};
-
-export const RenderPosition = {
-  BEFOREBEGIN: `beforebegin`,
-  AFTERBEGIN: `afterbegin`,
-  BEFOREEND: `beforeend`,
-  AFTEREND: `afterend`
-};
-
-export const renderElement = (container, element, place) => {
-  switch (place) {
-    case RenderPosition.BEFOREBEGIN:
-      container.before(element);
-      break;
-    case RenderPosition.AFTERBEGIN:
-      container.prepend(element);
-      break;
-    case RenderPosition.BEFOREEND:
-      container.append(element);
-      break;
-    case RenderPosition.AFTEREND:
-      container.after(element);
-      break;
-  }
-};
-
-export const createElement = (str) => {
-  const template = document.createElement(`template`);
-  template.innerHTML = str.trim();
-
-  return template.content.firstChild;
-};
-
-export const convertStringToElement = (str) => {
-  const template = document.createElement(`template`);
-  template.innerHTML = str.trim();
-  return template.content.firstChild;
 };

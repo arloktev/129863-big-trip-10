@@ -1,4 +1,4 @@
-import {getRandomElement, getRandomBetween, getRandomDate, formatDate, shuffle} from '../utils';
+import {getRandomElement, getRandomBetween, getRandomDate, formatDate, shuffle} from '../utils/common';
 import {EventsCount, TYPE_TRIP, CITY} from '../const';
 
 const additionalsOptions = [

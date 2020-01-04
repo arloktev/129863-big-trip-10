@@ -1,5 +1,6 @@
+import AbstractComponent from '../abstract-component/abstract-component';
 import {TYPE_TRIP, TYPE_ACTIVITY, CITY} from '../../const';
-import {ucFirst, costTimeFormat, createListTemplate, createElement} from '../../utils';
+import {ucFirst, costTimeFormat, createListTemplate} from '../../utils/common';
 
 const getTransferType = (arr, sortArr) => {
   return arr.filter((item) => !sortArr.includes(item));
@@ -150,9 +151,10 @@ const getTripEditTemplate = (trip) => {
   `;
 };
 
-export default class TripEdit {
+export default class TripEdit extends AbstractComponent {
   constructor(trip) {
-    this._element = null;
+    super();
+
     this._trip = trip;
   }
 
@@ -160,15 +162,8 @@ export default class TripEdit {
     return getTripEditTemplate(this._trip);
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
+  setEditFormSubmitHandler(handler) {
+    this.getElement().querySelector(`form`)
+      .addEventListener(`submit`, handler);
   }
 }
