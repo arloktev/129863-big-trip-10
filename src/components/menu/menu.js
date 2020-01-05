@@ -1,4 +1,4 @@
-import {createElement} from '../../utils';
+import AbstractComponent from '../abstract-component/abstract-component';
 
 const createTabTemplate = (name, activeElement) => {
   const classesElement = activeElement === 0 ? `trip-tabs__btn trip-tabs__btn--active` : `trip-tabs__btn`;
@@ -14,25 +14,14 @@ const getMenuTemplate = (names) => {
   `;
 };
 
-export default class Menu {
+export default class Menu extends AbstractComponent {
   constructor(names) {
-    this._element = null;
+    super();
+
     this._names = names;
   }
 
   getTemplate() {
     return getMenuTemplate(this._names);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  getRemove() {
-    this._element = null;
   }
 }

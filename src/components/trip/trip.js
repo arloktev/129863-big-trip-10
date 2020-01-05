@@ -1,4 +1,5 @@
-import {ucFirst, formatDate, formatTime, formatDuration, createListTemplate, createElement} from '../../utils';
+import AbstractComponent from '../abstract-component/abstract-component';
+import {ucFirst, formatDate, formatTime, formatDuration, createListTemplate} from '../../utils/common';
 
 const createOfferTemplate = (offer) => {
   const {name, price} = offer;
@@ -12,7 +13,7 @@ const createOfferTemplate = (offer) => {
   `;
 };
 
-export const getTripTemplate = (trip) => {
+const getTripTemplate = (trip) => {
   const {type, city, price, additionalOptions, startDate, endDate} = trip;
 
   const offersMarkup = createListTemplate(additionalOptions, createOfferTemplate);
@@ -51,9 +52,10 @@ export const getTripTemplate = (trip) => {
   `;
 };
 
-export default class Trip {
+export default class Trip extends AbstractComponent {
   constructor(trip) {
-    this._element = null;
+    super();
+
     this._trip = trip;
   }
 
@@ -61,15 +63,8 @@ export default class Trip {
     return getTripTemplate(this._trip);
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
+  setEditTripButtonClickHandler(handler) {
+    this.getElement().querySelector(`.event__rollup-btn`)
+      .addEventListener(`click`, handler);
   }
 }
