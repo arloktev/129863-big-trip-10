@@ -8,7 +8,7 @@ const createItemSortingTemplate = (name, activeElement) => {
   return `
     <div class="trip-sort__item  trip-sort__item--${name}">
       <input id="sort-${name}" class="trip-sort__input  visually-hidden" type="radio" name="trip-sort" value="sort-${name}" ${isChecked}>
-      <label class="trip-sort__btn" for="sort-${name}">
+      <label class="trip-sort__btn" for="sort-${name}" data-sort-type="${name}">
         ${name}
         ${svgElement}
       </label>
@@ -33,9 +33,29 @@ export default class Sorting extends AbstractComponent {
     super();
 
     this._names = names;
+    this._currentSortType = `event`;
   }
 
   getTemplate() {
     return getSortingTemplate(this._names);
+  }
+
+  setClickHandler(handler) {
+    this.getElement().addEventListener(`click`, (evt) => {
+      evt.preventDefault();
+
+      if (evt.target.tagName !== `LABEL`) {
+        return;
+      }
+
+      const typeSort = evt.target.dataset.sortType;
+
+      if (typeSort === this._defaultSorting) {
+        return;
+      }
+
+      this._currentSortType = typeSort;
+      handler(this._currentSortType);
+    });
   }
 }

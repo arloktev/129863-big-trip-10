@@ -18,7 +18,7 @@ const NODE_TRIP = {
   tripEvents
 };
 
-const renderEvents = (event, place) => {
+const renderEvent = (event, place) => {
   const tripComponent = new Trip(event);
   const tripEditComponent = new TripEdit(event);
 
@@ -47,7 +47,6 @@ const renderEvents = (event, place) => {
 };
 
 const generateDaysFragment = (events) => {
-
   const daysFragment = document.createDocumentFragment();
 
   dates.forEach((date, dateIndex) => {
@@ -56,7 +55,22 @@ const generateDaysFragment = (events) => {
 
     events
       .filter((event) => formatDate(event.startDate) === date)
-      .forEach((event) => renderEvents(event, tripEventsList));
+      .forEach((event) => renderEvent(event, tripEventsList));
+
+    daysFragment.append(day);
+  });
+
+  return daysFragment;
+};
+
+const generateSingleDaysFragment = (events) => {
+  const daysFragment = document.createDocumentFragment();
+
+  events.forEach((event, eventIndex) => {
+    const day = new Day(event.startDate, eventIndex).getElement();
+    const tripEventsList = day.querySelector(`.trip-events__list`);
+
+    renderEvent(event, tripEventsList);
 
     daysFragment.append(day);
   });
@@ -77,6 +91,7 @@ export default class TripController {
 
     if (events.length < 1) {
       this._container.append(this._noPoints.getElement());
+
       return;
     }
 
@@ -86,5 +101,30 @@ export default class TripController {
     renderElement(this._container, this._tripDays.getElement(), RenderPosition.BEFOREEND);
 
     this._tripDays.getElement().append(generateDaysFragment(events));
+
+    this._sorting.setClickHandler((sortType) => {
+      let sortedTrips = [];
+
+      switch (sortType) {
+        case `time`:
+          sortedTrips = events.slice().sort((prev, next) => (+(next.endDate - next.startDate) - +(prev.endDate - prev.startDate)));
+          break;
+        case `price`:
+          sortedTrips = events.slice().sort((prev, next) => next.price - prev.price);
+          break;
+        case `event`:
+          sortedTrips = events;
+          break;
+      }
+
+      this._tripDays.getElement().innerHTML = ``;
+
+      if (sortType !== `event`) {
+        this._tripDays.getElement().append(generateSingleDaysFragment(sortedTrips));
+        return;
+      }
+
+      this._tripDays.getElement().append(generateDaysFragment(events));
+    });
   }
 }
