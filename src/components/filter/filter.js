@@ -25,7 +25,6 @@ export default class Filter extends AbstractComponent {
   constructor(names) {
     super();
 
-    this._element = null;
     this._names = names;
   }
 
