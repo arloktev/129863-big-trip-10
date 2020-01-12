@@ -1,7 +1,7 @@
 import AbstractComponent from '../abstract-component/abstract-component';
 
 const createTabTemplate = (name, activeElement) => {
-  const classesElement = activeElement === 0 ? `trip-tabs__btn trip-tabs__btn--active` : `trip-tabs__btn`;
+  const classesElement = `trip-tabs__btn ${activeElement === 0 ? `trip-tabs__btn--active` : ``}`;
 
   return `<a class="${classesElement}" href="#">${name}</a>`;
 };

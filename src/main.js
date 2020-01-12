@@ -17,9 +17,7 @@ const NODE_TRIP = {
   tripEvents
 };
 
-const calculatePrice = (items) => items
-  .map((item) => item.price)
-  .reduce((sum, current) => sum + current, 0);
+const calculatePrice = (items) => items.reduce((sum, current) => sum + current.price, 0);
 
 tripCost.innerHTML = calculatePrice(events);
 renderElement(NODE_TRIP.lastHeadControls, new Menu(NAME_TABS).getElement(), RenderPosition.BEFOREBEGIN);

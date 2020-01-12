@@ -11,12 +11,6 @@ import {RenderPosition, replaceElement, renderElement} from '../utils/render';
 import {dates} from '../mock/trip';
 
 const tripInfo = document.querySelector(`.trip-main__trip-info`);
-const tripEvents = document.querySelector(`.trip-events`);
-
-const NODE_TRIP = {
-  tripInfo,
-  tripEvents
-};
 
 const renderEvent = (event, place) => {
   const tripComponent = new Trip(event);
@@ -95,7 +89,7 @@ export default class TripController {
       return;
     }
 
-    renderElement(NODE_TRIP.tripInfo, new TripRoute(events).getElement(), RenderPosition.AFTERBEGIN);
+    renderElement(tripInfo, new TripRoute(events).getElement(), RenderPosition.AFTERBEGIN);
 
     renderElement(this._container, this._sorting.getElement(), RenderPosition.BEFOREEND);
     renderElement(this._container, this._tripDays.getElement(), RenderPosition.BEFOREEND);

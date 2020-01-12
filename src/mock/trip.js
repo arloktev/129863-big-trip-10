@@ -13,10 +13,10 @@ const description = `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cr
 const getDescriptionArray = description.split(`. `);
 
 const generateDescription = () => {
-  const startValue = 1;
-  const endValue = 4;
+  const START_VALUE = 1;
+  const END_VALUE = 4;
 
-  return shuffle(getDescriptionArray).slice(0, getRandomBetween(startValue, endValue)).join(`. `);
+  return shuffle(getDescriptionArray).slice(0, getRandomBetween(START_VALUE, END_VALUE)).join(`. `);
 };
 
 const generateImages = (count) => {
@@ -30,21 +30,21 @@ const generateImages = (count) => {
 };
 
 const generateAdditionalsOptions = (array) => {
-  const startValue = 0;
-  const endValue = 2;
+  const START_VALUE = 0;
+  const END_VALUE = 2;
 
   return array
     .filter(() => Math.random() > 0.5)
-    .slice(startValue, endValue);
+    .slice(START_VALUE, END_VALUE);
 };
 
 const generateTrip = () => {
-  const startValuePrice = 1;
-  const endValuePrice = 20;
-  const decade = 10;
+  const START_VALUE_PRICE = 1;
+  const END_VALUE_PRICE = 20;
+  const DECADE = 10;
 
-  const startValueImage = 0;
-  const endValueImage = 5;
+  const START_VALUE_IMAGE = 0;
+  const END_VALUE_IMAGE = 5;
 
   const startRandomDate = getRandomDate();
   const endRandomDate = getRandomDate();
@@ -56,11 +56,11 @@ const generateTrip = () => {
   return {
     'type': getRandomElement(TYPE_TRIP),
     'city': getRandomElement(CITY),
-    'images': generateImages(getRandomBetween(startValueImage, endValueImage)),
+    'images': generateImages(getRandomBetween(START_VALUE_IMAGE, END_VALUE_IMAGE)),
     'description': generateDescription(description),
     startDate,
     endDate,
-    'price': getRandomBetween(startValuePrice, endValuePrice) * decade,
+    'price': getRandomBetween(START_VALUE_PRICE, END_VALUE_PRICE) * DECADE,
     'additionalOptions': generateAdditionalsOptions(additionalsOptions)
   };
 };
