@@ -1,4 +1,4 @@
-import AbstractComponent from '../abstract-component/abstract-component';
+import AbstractSmartComponent from '../abstract-smart-component/abstract-smart-component';
 import {TYPE_TRIP, TYPE_ACTIVITY, CITY} from '../../const';
 import {ucFirst, costTimeFormat, createListTemplate} from '../../utils/common';
 
@@ -6,10 +6,10 @@ const getTransferType = (arr, sortArr) => {
   return arr.filter((item) => !sortArr.includes(item));
 };
 
-const createEventTypeTemplate = (type, index) => {
+const createEventTypeTemplate = (type, currentType, index) => {
   return `
     <div class="event__type-item">
-      <input id="event-type-${type}-${index}" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${type}">
+      <input id="event-type-${type}-${index}" class="event__type-input visually-hidden" type="radio" name="event-type" value="${type}" ${currentType === type ? `checked` : ``}>
       <label class="event__type-label  event__type-label--${type}" for="event-type-${type}-${index}">${ucFirst(type)}</label>
     </div>
   `;
@@ -45,10 +45,10 @@ const formatDate = (date) => {
 };
 
 const getTripEditTemplate = (trip) => {
-  const {type, city, images, description, price, additionalOptions, startDate, endDate} = trip;
+  const {id, type, city, images, description, price, additionalOptions, startDate, endDate, isFavorite} = trip;
 
-  const transferMarkup = createListTemplate(getTransferType(TYPE_TRIP, TYPE_ACTIVITY), createEventTypeTemplate);
-  const activityMarkup = createListTemplate(TYPE_ACTIVITY, createEventTypeTemplate);
+  const transferMarkup = getTransferType(TYPE_TRIP, TYPE_ACTIVITY).map((item, index) => createEventTypeTemplate(item, type, index)).join(`\n`);
+  const activityMarkup = TYPE_ACTIVITY.map((item, index) => createEventTypeTemplate(item, type, index)).join(`\n`);
   const destinationMarkup = createListTemplate(CITY, createDestinationTemplate);
   const offersMarkup = createListTemplate(additionalOptions, createOfferTemplate);
   const imagesMarkup = createListTemplate(images, createImageTemplate);
@@ -58,11 +58,11 @@ const getTripEditTemplate = (trip) => {
       <form class="event  event--edit" action="#" method="post">
         <header class="event__header">
           <div class="event__type-wrapper">
-            <label class="event__type  event__type-btn" for="event-type-toggle-1">
+            <label class="event__type  event__type-btn" for="event-type-toggle-${id}">
               <span class="visually-hidden">Choose event type</span>
               <img class="event__type-icon" width="17" height="17" src="img/icons/${type}.png" alt="Event type icon">
             </label>
-            <input class="event__type-toggle  visually-hidden" id="event-type-toggle-1" type="checkbox">
+            <input class="event__type-toggle  visually-hidden" id="event-type-toggle-${id}" type="checkbox">
 
             <div class="event__type-list">
               <fieldset class="event__type-group">
@@ -80,40 +80,40 @@ const getTripEditTemplate = (trip) => {
           </div>
 
           <div class="event__field-group  event__field-group--destination">
-            <label class="event__label  event__type-output" for="event-destination-1">
+            <label class="event__label  event__type-output" for="event-destination-${id}">
               ${ucFirst(type)} to
             </label>
-            <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${city}" list="destination-list-1">
-            <datalist id="destination-list-1">
+            <input class="event__input  event__input--destination" id="event-destination-${id}" type="text" name="event-destination" value="${city}" list="destination-list-${id}">
+            <datalist id="destination-list-${id}">
               ${destinationMarkup}
             </datalist>
           </div>
 
           <div class="event__field-group  event__field-group--time">
-            <label class="visually-hidden" for="event-start-time-1">
+            <label class="visually-hidden" for="event-start-time-${id}">
               From
             </label>
-            <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${formatDate(startDate)}">
+            <input class="event__input  event__input--time" id="event-start-time-${id}" type="text" name="event-start-time" value="${formatDate(startDate)}">
             &mdash;
-            <label class="visually-hidden" for="event-end-time-1">
+            <label class="visually-hidden" for="event-end-time-${id}">
               To
             </label>
-            <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${formatDate(endDate)}">
+            <input class="event__input  event__input--time" id="event-end-time-${id}" type="text" name="event-end-time" value="${formatDate(endDate)}">
           </div>
 
           <div class="event__field-group  event__field-group--price">
-            <label class="event__label" for="event-price-1">
+            <label class="event__label" for="event-price-${id}">
               <span class="visually-hidden">Price</span>
               &euro;
             </label>
-            <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${price}">
+            <input class="event__input  event__input--price" id="event-price-${id}" type="text" name="event-price" value="${price}">
           </div>
 
           <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
           <button class="event__reset-btn" type="reset">Delete</button>
 
-          <input id="event-favorite-1" class="event__favorite-checkbox  visually-hidden" type="checkbox" name="event-favorite" checked>
-          <label class="event__favorite-btn" for="event-favorite-1">
+          <input id="event-favorite-${id}" class="event__favorite-checkbox  visually-hidden" type="checkbox" name="event-favorite" ${isFavorite ? `checked` : ``}>
+          <label class="event__favorite-btn" for="event-favorite-${id}">
             <span class="visually-hidden">Add to favorite</span>
             <svg class="event__favorite-icon" width="28" height="28" viewBox="0 0 28 28">
               <path d="M14 21l-8.22899 4.3262 1.57159-9.1631L.685209 9.67376 9.8855 8.33688 14 0l4.1145 8.33688 9.2003 1.33688-6.6574 6.48934 1.5716 9.1631L14 21z"/>
@@ -151,11 +151,13 @@ const getTripEditTemplate = (trip) => {
   `;
 };
 
-export default class TripEdit extends AbstractComponent {
+export default class TripEdit extends AbstractSmartComponent {
   constructor(trip) {
     super();
 
     this._trip = trip;
+
+    this._subscribeOnEvents();
   }
 
   getTemplate() {
@@ -165,5 +167,30 @@ export default class TripEdit extends AbstractComponent {
   setEditFormSubmitHandler(handler) {
     this.getElement().querySelector(`form`)
       .addEventListener(`submit`, handler);
+  }
+
+  setFavoriteHandler(handler) {
+    this.getElement().querySelector(`.event__favorite-checkbox`)
+      .addEventListener(`click`, handler);
+  }
+
+  rerender() {
+    super.rerender();
+  }
+
+  recoveryListeners() {
+    this._subscribeOnEvents();
+  }
+
+  _subscribeOnEvents() {
+    const element = this.getElement();
+
+    element.querySelector(`.event__type-list`)
+      .addEventListener(`change`, (evt) => {
+        const inputValue = evt.target.value;
+
+        this._trip = Object.assign(this._trip, {type: inputValue});
+        this.rerender();
+      });
   }
 }

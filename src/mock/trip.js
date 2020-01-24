@@ -54,6 +54,7 @@ const generateTrip = () => {
   endDate.setTime(Math.max(startRandomDate, endRandomDate));
 
   return {
+    'id': Date.now(),
     'type': getRandomElement(TYPE_TRIP),
     'city': getRandomElement(CITY),
     'images': generateImages(getRandomBetween(START_VALUE_IMAGE, END_VALUE_IMAGE)),
@@ -61,7 +62,8 @@ const generateTrip = () => {
     startDate,
     endDate,
     'price': getRandomBetween(START_VALUE_PRICE, END_VALUE_PRICE) * DECADE,
-    'additionalOptions': generateAdditionalsOptions(additionalsOptions)
+    'additionalOptions': generateAdditionalsOptions(additionalsOptions),
+    'isFavorite': Math.random() > 0.5
   };
 };
 

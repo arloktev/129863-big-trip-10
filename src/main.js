@@ -2,7 +2,7 @@ import Menu from './components/menu/menu';
 import Filter from './components/filter/filter';
 import {NAME_FILTERS, NAME_TABS} from './const';
 import {RenderPosition, renderElement} from './utils/render';
-import TripController from './controllers/trip-controller';
+import TripController from './controllers/trip';
 import {events} from './mock/trip';
 
 const tripControls = document.querySelector(`.trip-main__trip-controls`);
