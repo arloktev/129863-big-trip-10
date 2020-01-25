@@ -1,4 +1,5 @@
 import {CountTime} from '../const';
+import moment from 'moment';
 
 export const ucFirst = (str) => str.charAt(0).toUpperCase() + str.slice(1);
 
@@ -27,20 +28,9 @@ export const getInfoDate = (date) => {
   };
 };
 
-export const formatDate = (date) => {
-  const year = date.getFullYear();
-  const month = costTimeFormat(date.getMonth() + 1);
-  const day = costTimeFormat(date.getDate());
+export const formatDate = (date) => moment(date).format(`YYYY-MM-DD`);
 
-  return `${year}-${month}-${day}`;
-};
-
-export const formatTime = (date) => {
-  const hours = costTimeFormat(date.getHours());
-  const minutes = costTimeFormat(date.getMinutes());
-
-  return `${hours}:${minutes}`;
-};
+export const formatTime = (date) => moment(date).format(`hh:mm`);
 
 export const formatDuration = (startDate, endDate) => {
   const msSecond = 1000;

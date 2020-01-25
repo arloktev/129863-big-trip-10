@@ -1,3 +1,5 @@
+import flatpickr from 'flatpickr';
+import 'flatpickr/dist/flatpickr.min.css';
 import AbstractSmartComponent from '../abstract-smart-component/abstract-smart-component';
 import {TYPE_TRIP, TYPE_ACTIVITY, CITY} from '../../const';
 import {ucFirst, costTimeFormat, createListTemplate} from '../../utils/common';
@@ -156,7 +158,12 @@ export default class TripEdit extends AbstractSmartComponent {
     super();
 
     this._trip = trip;
+    this._flatpickr = {
+      START: null,
+      END: null
+    };
 
+    this._applyFlatpickr();
     this._subscribeOnEvents();
   }
 
@@ -176,6 +183,7 @@ export default class TripEdit extends AbstractSmartComponent {
 
   rerender() {
     super.rerender();
+    this._applyFlatpickr();
   }
 
   recoveryListeners() {
@@ -192,5 +200,34 @@ export default class TripEdit extends AbstractSmartComponent {
         this._trip = Object.assign(this._trip, {type: inputValue});
         this.rerender();
       });
+  }
+
+  _applyFlatpickr() {
+    this._removeFlatpickr();
+
+    const [startDateInput, endDateInput] = Array.from(this.getElement().querySelectorAll(`.event__input--time`));
+
+    this._flatpickr.START = this._createFlatpickr(startDateInput, this._trip.startDate);
+    this._flatpickr.END = this._createFlatpickr(endDateInput, this._trip.endDate);
+  }
+
+  _createFlatpickr(node, date) {
+    return flatpickr(node, {
+      altInput: true,
+      altFormat: `d/m/Y H:i`,
+      allowInput: true,
+      enableTime: true,
+      dateFormat: `d/m/Y H:i`,
+      defaultDate: date,
+    });
+  }
+
+  _removeFlatpickr() {
+    if (this._flatpickr.START && this._flatpickr.END) {
+      this._flatpickr.START.destroy();
+      this._flatpickr.START = null;
+      this._flatpickr.END.destroy();
+      this._flatpickr.END = null;
+    }
   }
 }
